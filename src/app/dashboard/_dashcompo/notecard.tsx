@@ -1,6 +1,6 @@
 import React from "react";
 import { CiStickyNote } from "react-icons/ci";
-function Notecard({ onAddNote, onDeleteNote }) {
+function Notecard({ onEditNote, onDeleteNote }) {
   return (
     <div className="flex items-center gap-4 mb-2">
       <CiStickyNote className="text-xl" />
@@ -11,13 +11,7 @@ function Notecard({ onAddNote, onDeleteNote }) {
       <div className="flex gap-2">
         <button
           className="bg-black p-2 rounded hover:bg-black/70 text-md font-semibold text-white"
-          onClick={onAddNote}
-        >
-          Add
-        </button>
-        <button
-          className="bg-black p-2 rounded hover:bg-black/70 text-md font-semibold text-white"
-          onClick={() => console.log("edit")}
+          onClick={onEditNote}
         >
           Edit
         </button>

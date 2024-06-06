@@ -72,7 +72,7 @@ export default function Dash() {
             <br />
             <div className="flex flex-col gap-4">
               <Notecard
-                onAddNote={handleAddNoteOpen}
+                onEditNote={handleAddNoteOpen}
                 onDeleteNote={handleDeleteNoteOpen}
               />
             </div>
@@ -82,7 +82,7 @@ export default function Dash() {
             <br />
             <div className="flex flex-col gap-4">
               <Notecard
-                onAddNote={handleAddNoteOpen}
+                onEditNote={handleAddNoteOpen}
                 onDeleteNote={handleDeleteNoteOpen}
               />
             </div>
@@ -92,7 +92,7 @@ export default function Dash() {
             <br />
             <div className="flex flex-col gap-4">
               <Notecard
-                onAddNote={handleAddNoteOpen}
+                onEditNote={handleAddNoteOpen}
                 onDeleteNote={handleDeleteNoteOpen}
               />
             </div>
