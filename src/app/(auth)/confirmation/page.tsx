@@ -21,34 +21,40 @@ export default function Page() {
     {
       id: 1,
       type: "text",
+      label: "Your username",
+      register: "username",
+      req: "Please enter your username",
+      max: 50,
+      min: 2,
+      msgmax: "The max characters allowed is 50",
+      msgmin: "min characters allowed is 2",
+      pattern: /^[A-Za-z0-9]+$/,
+      msgptr: "Only Alphabets and digits are allowed in username",
+    },
+    {
+      id: 1,
+      type: "text",
       label: "Your confirmation code",
       register: "code",
       req: "Please Enter the confirmation code",
-      max: 5,
-      min: 5,
       pattern: /^\d+$/,
       msgptr: "This is not a valid code confirmation only numbers",
-      msgmax: "The max characters allowed is 5",
-      msgmin: "min characters allowed is 5",
     },
   ];
 
   // handle submit
   const submitform: SubmitHandler<ConfiSchema> = async (data) => {
-    console.log(data);
-    reset();
-
-    // try {
-    //   const resp = await axios.post("/api/signin", data);
-    //   if (!resp) {
-    //     console.error("Something went wrong");
-    //   } else {
-    //     console.log("The data is logged 🎉");
-    //     reset();
-    //   }
-    // } catch (e) {
-    //   console.error(e);
-    // }
+    try {
+      const resp = await axios.post("/api/confirm", data);
+      if (!resp) {
+        console.error("Something went wrong");
+      } else {
+        console.log("The data is logged 🎉");
+        reset();
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (

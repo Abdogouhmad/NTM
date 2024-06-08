@@ -36,7 +36,7 @@ export default function SignUpForm() {
     },
     {
       id: 2,
-      type: "text",
+      type: "email",
       label: "Your email",
       register: "email",
       req: "Please enter your email",
