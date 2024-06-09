@@ -1,26 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
+import { signIn } from '@/utils/aws-auth';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
-  if (req.method === "POST" || req.method === "post") {
-    try {
-      const { username, email, password } = await req.json();
-      console.log("UserName: ", username);
-      console.log("Email: ", email);
-      console.log("Password: ", password);
+  try {
+    const { username, password } = await req.json();
+
+    // Call the signIn function
+    const result = await signIn(username, password);
+
+    if (result.AuthenticationResult) {
       return NextResponse.json(
-        { success: "The message is sent" },
-        { status: 200 }
+        { message: 'Sign In process done' },
+        { status: 202 }
       );
-    } catch (e) {
+    } else {
       return NextResponse.json(
-        { error: "Something went wrong" },
-        { status: 400 }
+        { message: 'Sign In process failed' },
+        { status: 401 }
       );
     }
-  } else {
+  } catch (error) {
+    console.error('Sign-in error:', error);
     return NextResponse.json(
-      { NotAllowed: "Method not Allowed" },
-      { status: 405 }
+      { error: 'Something went wrong', details: error.message },
+      { status: 400 }
     );
   }
 }

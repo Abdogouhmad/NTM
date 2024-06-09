@@ -1,8 +1,5 @@
 import { confirmSignUp } from "@/utils/aws-auth";
 import { NextRequest, NextResponse } from "next/server";
-// Ensure AWS Amplify is configured properly
-// import awsconfig from "../src/aws-exports"; // Adjust the import path as needed
-// Auth.configure(awsconfig);
 
 export async function POST(req: NextRequest) {
   if (req.method.toUpperCase() === "POST") {
@@ -10,12 +7,19 @@ export async function POST(req: NextRequest) {
       // Deconstruct the data from signup form
       const { username, code } = await req.json();
 
-      const result = confirmSignUp(username, code);
+      const result = await confirmSignUp(username, code);
       // Return success response and redirect URL
-      return NextResponse.json(
-        { message: "Account is confirmed", result },
-        { status: 200 }
-      );
+      if (result) {
+        return NextResponse.json(
+          { message: "Confirmation done well" },
+          { status: 202 }
+        );
+      } else {
+        return NextResponse.json(
+          { message: "COnfirmation failed" },
+          { status: 500 }
+        );
+      }
     } catch (error) {
       console.error("Sign up error:", error); // Log the error for debugging
       return NextResponse.json(

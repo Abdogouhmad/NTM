@@ -15,5 +15,5 @@ bun dev
 ```
 
 # Tasks
-- [ ] create redirection in bothe confirm/sign up
+- [x] create redirection in bothe confirm/sign up
 - [ ] impl login

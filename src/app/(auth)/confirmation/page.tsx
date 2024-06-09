@@ -1,13 +1,13 @@
 "use client";
 import axios from "axios";
-import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
-
+import { useRouter } from "next/navigation";
 type ConfiSchema = {
   code: number;
 };
 
 export default function Page() {
+  const router = useRouter();
   // call the useForm hook
   const {
     register,
@@ -32,7 +32,7 @@ export default function Page() {
       msgptr: "Only Alphabets and digits are allowed in username",
     },
     {
-      id: 1,
+      id: 2,
       type: "text",
       label: "Your confirmation code",
       register: "code",
@@ -46,11 +46,13 @@ export default function Page() {
   const submitform: SubmitHandler<ConfiSchema> = async (data) => {
     try {
       const resp = await axios.post("/api/confirm", data);
-      if (!resp) {
-        console.error("Something went wrong");
-      } else {
-        console.log("The data is logged 🎉");
+      // if the resp went well clear the forma and redirect to confirmation
+      if (resp.status === 202 || 200) {
+        console.log("well Confirmed 🎉");
         reset();
+        router.push("/login");
+      } else {
+        console.error("Confirmation failed:", resp.data.message);
       }
     } catch (e) {
       console.error(e);
@@ -73,12 +75,12 @@ export default function Page() {
               {...register(field.register as keyof ConfiSchema, {
                 required: field.req,
                 maxLength: {
-                  value: field.max,
-                  message: field.msgmax,
+                  value: field.max as number,
+                  message: field.msgmax as string,
                 },
                 minLength: {
-                  value: field.min,
-                  message: field.msgmin,
+                  value: field.min as number,
+                  message: field.msgmin as string,
                 },
                 pattern: {
                   value: field.pattern as RegExp,

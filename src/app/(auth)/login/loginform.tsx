@@ -2,16 +2,15 @@
 import axios from "axios";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
-// the type of schema
 type FormSchema = {
   username: string;
-  email: string;
   password: string;
 };
 
 export default function SignInForm() {
-  // call the useForm hook
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -19,20 +18,17 @@ export default function SignInForm() {
     reset,
   } = useForm<FormSchema>();
 
-  // provide the form object
   const Form_object = [
     {
       id: 1,
       type: "text",
-      label: "Your email",
-      register: "email",
-      req: "Please Enter your correct email",
+      label: "Your username",
+      register: "username",
+      req: "Please enter your username",
       max: 100,
-      min: 5,
-      pattern: /@/i,
-      msgptr: "This is not a valid email",
+      min: 2,
       msgmax: "The max characters allowed is 100",
-      msgmin: "min characters allowed is 5",
+      msgmin: "min characters allowed is 2",
     },
     {
       id: 2,
@@ -49,21 +45,19 @@ export default function SignInForm() {
     },
   ];
 
-  // handle submit
   const submitform: SubmitHandler<FormSchema> = async (data) => {
-    console.log(data);
-    reset();
-
     try {
       const resp = await axios.post("/api/signin", data);
-      if (!resp) {
-        console.error("Something went wrong");
+      if (resp.status === 202) {
+        console.log("Welcome Back 🎉");
+        router.push("/dashboard");
       } else {
-        console.log("The data is logged 🎉");
-        reset();
+        console.log("Sign-in failed");
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      reset();
     }
   };
 
@@ -74,29 +68,19 @@ export default function SignInForm() {
         className="flex flex-col space-y-7 items-center justify-center min-h-screen p-10"
       >
         <h1 className="text-xl font-bold">
-          Log In <span className="text-green-600"> NTM </span>
-          and start taking notes
+          Log In <span className="text-green-600">NTM</span> and start taking
+          notes
         </h1>
         {Form_object.map((field) => (
           <div key={field.id} className="w-96">
             <input
-              className="text-lg font-semibold w-full border border-gray-300 bg-inherit p-2 rounded"
+              className="text-base font-medium w-full border border-gray-300 bg-inherit p-2 rounded"
               type={field.type}
               placeholder={field.label}
               {...register(field.register as keyof FormSchema, {
                 required: field.req,
-                maxLength: {
-                  value: field.max,
-                  message: field.msgmax,
-                },
-                minLength: {
-                  value: field.min,
-                  message: field.msgmin,
-                },
-                pattern: {
-                  value: field.pattern as RegExp,
-                  message: field.msgptr as string,
-                },
+                maxLength: { value: field.max, message: field.msgmax },
+                minLength: { value: field.min, message: field.msgmin },
               })}
             />
             {errors[field.register as keyof FormSchema] && (
@@ -109,8 +93,7 @@ export default function SignInForm() {
                 href={field.rt}
                 className="text-sm font-medium text-blue-500 hover:text-blue-700"
               >
-                {" "}
-                {field.forgot}{" "}
+                {field.forgot}
               </Link>
             )}
           </div>
@@ -122,9 +105,8 @@ export default function SignInForm() {
         >
           Log In
         </button>
-        <Link href="/signup" className="text-blue-600 font-medium text-md ">
-          {" "}
-          Don&apos;t have an acount yet?{" "}
+        <Link href="/signup" className="text-blue-600 font-medium text-md">
+          Don't have an account yet?
         </Link>
       </form>
     </>

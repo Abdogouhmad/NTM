@@ -65,12 +65,12 @@ export async function confirmSignUp(username: string, code: string): Promise<Con
 }
 
 // SignIn function
-export async function signIn(username: string, password: string): Promise<SignInResult> {
+export async function signIn(identifier: string, password: string): Promise<SignInResult> {
   const params: AWS.CognitoIdentityServiceProvider.InitiateAuthRequest = {
     AuthFlow: 'USER_PASSWORD_AUTH',
     ClientId: ConfigAws.COGNITO_CLIENT_ID,
     AuthParameters: {
-      USERNAME: username,
+      USERNAME: identifier,
       PASSWORD: password,
     },
   };

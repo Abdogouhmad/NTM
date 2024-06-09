@@ -8,7 +8,7 @@ export default function Home() {
   const router = useRouter();
   const Btn_metadata = [
     { id: 1, name: "Sign Up", rt: "/signup" },
-    { id: 2, name: "Sign In", rt: "/login" },
+    { id: 2, name: "Log In", rt: "/login" },
   ];
   return (
     <>

@@ -62,14 +62,16 @@ export default function SignUpForm() {
 
   // handle submit
   const submitform: SubmitHandler<FormSchema> = async (data) => {
-    // console.log(data);
     try {
+      // post the form at the backend
       const resp = await axios.post("/api/signup", data);
-      if (!resp) {
-        console.error("Something went wrong");
-      } else {
+      // if the resp went well clear the forma and redirect to confirmation
+      if (resp.status === 202 || 200) {
         console.log("The data is logged 🎉");
         reset();
+        router.push("/confirmation");
+      } else {
+        console.error("Signup failed:", resp.data.message);
       }
     } catch (e) {
       console.error(e);
