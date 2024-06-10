@@ -2,6 +2,8 @@
 import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+
+// type
 type ConfiSchema = {
   code: number;
 };

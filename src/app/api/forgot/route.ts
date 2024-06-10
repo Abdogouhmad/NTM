@@ -1,21 +1,21 @@
-import { signIn } from '@/utils/aws-auth';
+import { resetPassword } from '@/utils/aws-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const { username, password } = await req.json();
+    const { username } = await req.json();
 
     // Call the signIn function
-    const result = await signIn(username, password);
+    const result = await resetPassword(username);
 
     if (result) {
       return NextResponse.json(
-        { message: 'Sign In process done' },
+        { message: 'Check inbox' },
         { status: 202 }
       );
     } else {
       return NextResponse.json(
-        { message: 'Sign In process failed' },
+        { message: 'Something wrong while resting password' },
         { status: 401 }
       );
     }
@@ -27,3 +27,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
