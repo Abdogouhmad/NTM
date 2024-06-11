@@ -1,16 +1,16 @@
-import { sendResetPassword } from '@/utils/aws-auth';
+import { resetPassword } from '@/utils/aws-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const { username } = await req.json();
+    const { username, resetcode, newpassword } = await req.json();
 
     // Call the signIn function
-    const result = await sendResetPassword(username);
+    const result = await resetPassword(username, resetcode, newpassword);
 
     if (result) {
       return NextResponse.json(
-        { message: 'Check inbox' },
+        { message: 'The password updated' },
         { status: 202 }
       );
     } else {

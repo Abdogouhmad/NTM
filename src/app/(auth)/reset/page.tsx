@@ -6,11 +6,11 @@ import toast from "react-hot-toast";
 // the type of schema
 type FormSchema = {
   username: string;
-  email: string;
-  password: string;
+  resetcode: string;
+  newpassword: string;
 };
 
-export default function SignUpForm() {
+export default function Page() {
   const router = useRouter();
   // call the useForm hook
   const {
@@ -37,23 +37,21 @@ export default function SignUpForm() {
     },
     {
       id: 2,
-      type: "email",
-      label: "Your email",
-      register: "email",
-      req: "Please enter your email",
-      max: 100,
-      min: 5,
-      pattern: /@/i,
-      msgptr: "This is not a valid email",
-      msgmax: "The max characters allowed is 100",
-      msgmin: "min characters allowed is 5",
+      type: "text",
+      label: "Reset code",
+      register: "resetcode",
+      req: "Please enter reset code",
+      max: 10,
+      min: 3,
+      msgmax: "The max characters allowed is 10",
+      msgmin: "min characters allowed is 3",
     },
     {
       id: 3,
       type: "password",
-      label: "Your password",
-      register: "password",
-      req: "Please enter your password",
+      label: "Your new password",
+      register: "newpassword",
+      req: "Please enter your new password",
       max: 12,
       min: 8,
       msgmax: "The max characters allowed is 12",
@@ -65,14 +63,14 @@ export default function SignUpForm() {
   const submitform: SubmitHandler<FormSchema> = async (data) => {
     try {
       // post the form at the backend
-      const resp = await axios.post("/api/signup", data);
+      const resp = await axios.post("/api/reset", data);
       // if the resp went well clear the forma and redirect to confirmation
       if (resp.status === 202 || 200) {
-        toast.success("check your inbox for confirmation code");
+        toast.success("Password is updated successfuly");
         reset();
-        router.push("/confirmation");
+        router.push("/login");
       } else {
-        toast.error("signup failed ", resp.data.message);
+        toast.success("Updating password is failed:", resp.data.message);
       }
     } catch (e) {
       console.error(e);
@@ -85,8 +83,7 @@ export default function SignUpForm() {
       className="flex flex-col space-y-5 items-center justify-center min-h-screen p-10"
     >
       <h1 className="text-2xl md:text-xl text-center font-bold">
-        Sign Up in <span className="text-green-600"> Noty </span>
-        and start taking notes
+        Update Your Password
       </h1>
       {Form_object.map((field) => (
         <div key={field.id} className="w-96">
@@ -122,14 +119,7 @@ export default function SignUpForm() {
         type="submit"
         className="w-96 rounded border border-green-600 p-2 text-md font-medium hover:bg-green-600"
       >
-        Sign Up
-      </button>
-      <button
-        disabled={isSubmitting}
-        onClick={() => router.push("/login")}
-        className="w-96 rounded border border-black p-2 text-md font-medium hover:bg-green-600"
-      >
-        Log In
+        Update
       </button>
     </form>
   );

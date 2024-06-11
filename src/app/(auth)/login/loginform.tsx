@@ -3,6 +3,7 @@ import axios from "axios";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type FormSchema = {
   username: string;
@@ -49,10 +50,10 @@ export default function SignInForm() {
     try {
       const resp = await axios.post("/api/signin", data);
       if (resp.status === 202) {
-        console.log("Welcome Back 🎉");
+        toast.success("Welcome back");
         router.push("/dashboard");
       } else {
-        console.log("Sign-in failed");
+        toast.success("Faild to log in: ", resp.data.message);
       }
     } catch (e) {
       console.error(e);

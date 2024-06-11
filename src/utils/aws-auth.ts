@@ -1,4 +1,4 @@
-import { CognitoIdentityProviderClient, InitiateAuthCommand, SignUpCommand, ConfirmSignUpCommand, AuthFlowType, ForgotPasswordCommand } from "@aws-sdk/client-cognito-identity-provider"
+import { CognitoIdentityProviderClient, InitiateAuthCommand, SignUpCommand, ConfirmSignUpCommand, AuthFlowType, ForgotPasswordCommand, ConfirmForgotPasswordCommand } from "@aws-sdk/client-cognito-identity-provider"
 
 // Define the configuration type
 type AwsConfigType = {
@@ -117,7 +117,7 @@ async function signIn(identifier: string, password: string) {
 }
 
 // reset password v3 aws-sdk
-async function resetPassword(username: string) {
+async function sendResetPassword(username: string) {
   // create a param
   const param = {
     ClientId: ConfigAws.COGNITO_CLIENT_ID,
@@ -141,4 +141,40 @@ async function resetPassword(username: string) {
   }
 }
 
-export { signIn, signUp, confirmSignUp, resetPassword }
+
+async function resetPassword(username: string, code: string, newpassword: string) {
+  if (!username) {
+    throw new Error("Username is required");
+  }
+  if (!code) {
+    throw new Error("Confirmation code is required");
+  }
+  if (!newpassword) {
+    throw new Error("New password is required");
+  }
+  const param = {
+    ClientId: ConfigAws.COGNITO_CLIENT_ID,
+    Username: username,
+    ConfirmationCode: code,
+    Password: newpassword
+  }
+  try {
+    const command = new ConfirmForgotPasswordCommand(param);
+    const response = await cognitoClient.send(command);
+    if (response) {
+      return response
+    } else {
+      console.error("There is error sending reseting password");
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error resting password: ", error.message);
+    } else {
+      console.error("Error resting password: ", error);
+    }
+    throw error;
+  }
+}
+
+export { signIn, signUp, confirmSignUp, resetPassword, sendResetPassword }
+

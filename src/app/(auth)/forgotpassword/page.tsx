@@ -4,6 +4,7 @@ import React from "react";
 import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type ResetPassSchema = {
   email: string;
@@ -40,11 +41,11 @@ export default function Page() {
       const resp = await axios.post("/api/forgot", data);
       // if the resp went well clear the forma and redirect to confirmation
       if (resp.status === 202 || 200) {
-        console.log("Check your Inbox");
+        toast.success("Check your Inbox for reset code");
         reset();
-        router.push("/login");
+        router.push("/reset");
       } else {
-        console.error("Signup failed:", resp.data.message);
+        toast.error("Signup failed: ", resp.data.message);
       }
     } catch (e) {
       console.error(e);

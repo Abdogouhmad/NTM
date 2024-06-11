@@ -2,6 +2,7 @@
 import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 // type
 type ConfiSchema = {
@@ -50,11 +51,11 @@ export default function Page() {
       const resp = await axios.post("/api/confirm", data);
       // if the resp went well clear the forma and redirect to confirmation
       if (resp.status === 202 || 200) {
-        console.log("well Confirmed 🎉");
+        toast.success("well Confirmed 🎉");
         reset();
         router.push("/login");
       } else {
-        console.error("Confirmation failed:", resp.data.message);
+        toast.error("Confirmation failed:", resp.data.message);
       }
     } catch (e) {
       console.error(e);
