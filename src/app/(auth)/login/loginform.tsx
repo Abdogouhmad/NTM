@@ -53,10 +53,10 @@ export default function SignInForm() {
         toast.success("Welcome back");
         router.push("/dashboard");
       } else {
-        toast.success("Faild to log in: ", resp.data.message);
+        toast.error("Faild to log in: ", resp.data.message);
       }
     } catch (e) {
-      console.error(e);
+      toast.error("Faild to log in");
     } finally {
       reset();
     }
