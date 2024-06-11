@@ -141,7 +141,7 @@ async function sendResetPassword(username: string) {
   }
 }
 
-
+// reset the password
 async function resetPassword(username: string, code: string, newpassword: string) {
   if (!username) {
     throw new Error("Username is required");

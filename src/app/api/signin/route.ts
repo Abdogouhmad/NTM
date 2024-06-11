@@ -1,4 +1,5 @@
 import { signIn } from '@/utils/aws-auth';
+import { setCookie } from 'cookies-next';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -9,10 +10,13 @@ export async function POST(req: NextRequest) {
     const result = await signIn(username, password);
 
     if (result) {
-      return NextResponse.json(
-        { message: 'Sign In process done' },
+      const response = NextResponse.json(
+        { username: username },
         { status: 202 }
       );
+      // Set a cookie with the username
+      setCookie('username', username, { req, res: response });
+      return response;
     } else {
       return NextResponse.json(
         { message: 'Sign In process failed' },
