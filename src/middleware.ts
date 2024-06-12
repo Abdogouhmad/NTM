@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   // Get the access token from the cookie
   const accessToken = req.cookies.get('accessToken')?.value;
 
+  // TODO: call a function that verify the token
+  // and return it so you can use this token
+  // const verified = await tokenVerify(accessToken);
+  
   // If the user is not authenticated and trying to access the /dashboard route
   if (!accessToken && req.nextUrl.pathname.startsWith('/dashboard')) {
     // Redirect to the login page

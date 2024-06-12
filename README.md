@@ -18,5 +18,6 @@ bun dev
 - [x] sign up
 - [x] forgot and reset passsowrd
 - [x] login
-- [ ] logout
+- [x] logout (hard coded)
+- [ ] middleware is implemented (should handle the accesstoken key should be verificed)
 - [x] display username in dashboard (hard coded using cookies)
