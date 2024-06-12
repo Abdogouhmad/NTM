@@ -176,6 +176,7 @@ async function resetPassword(username: string, code: string, newpassword: string
   }
 }
 
+
 // maaan how can I log out
 async function logOut(accessToken: string) {
   const params = {
@@ -192,6 +193,7 @@ async function logOut(accessToken: string) {
     throw error;
   }
 }
+
 // revoke the shit
 async function revokeToken(refreshToken: string) {
   const params = {
@@ -208,5 +210,7 @@ async function revokeToken(refreshToken: string) {
     throw error;
   }
 }
+
+
 export { signIn, signUp, confirmSignUp, resetPassword, sendResetPassword, logOut, revokeToken }
 
