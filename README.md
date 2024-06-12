@@ -15,5 +15,8 @@ bun dev
 ```
 
 # Tasks
-- [x] create redirection in bothe confirm/sign up
-- [ ] impl login
+- [x] sign up
+- [x] forgot and reset passsowrd
+- [x] login
+- [ ] logout
+- [x] display username in dashboard (hard coded using cookies)
