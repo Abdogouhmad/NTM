@@ -1,4 +1,4 @@
-import { CognitoIdentityProviderClient, InitiateAuthCommand, SignUpCommand, ConfirmSignUpCommand, AuthFlowType, ForgotPasswordCommand, ConfirmForgotPasswordCommand } from "@aws-sdk/client-cognito-identity-provider"
+import { CognitoIdentityProviderClient, InitiateAuthCommand, SignUpCommand, ConfirmSignUpCommand, AuthFlowType, ForgotPasswordCommand, ConfirmForgotPasswordCommand, GlobalSignOutCommand, RevokeTokenCommand } from "@aws-sdk/client-cognito-identity-provider"
 
 // Define the configuration type
 type AwsConfigType = {
@@ -176,5 +176,37 @@ async function resetPassword(username: string, code: string, newpassword: string
   }
 }
 
-export { signIn, signUp, confirmSignUp, resetPassword, sendResetPassword }
+// maaan how can I log out
+async function logOut(accessToken: string) {
+  const params = {
+    ClientId: ConfigAws.COGNITO_CLIENT_ID,
+    AccessToken: accessToken,
+  };
+  try {
+    const command = new GlobalSignOutCommand(params);
+    const response = await cognitoClient.send(command);
+    console.log("Logout success: ", response);
+    return response;
+  } catch (error) {
+    console.error("Error logging out: ", error);
+    throw error;
+  }
+}
+// revoke the shit
+async function revokeToken(refreshToken: string) {
+  const params = {
+    ClientId: ConfigAws.COGNITO_CLIENT_ID,
+    Token: refreshToken,
+  };
+  try {
+    const command = new RevokeTokenCommand(params);
+    const response = await cognitoClient.send(command);
+    console.log("Token revoked successfully:", response);
+    return response;
+  } catch (error) {
+    console.error("Error revoking token:", error);
+    throw error;
+  }
+}
+export { signIn, signUp, confirmSignUp, resetPassword, sendResetPassword, logOut, revokeToken }
 

@@ -5,17 +5,17 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
   try {
     const { username, password } = await req.json();
-
     // Call the signIn function
     const result = await signIn(username, password);
-
-    if (result) {
+    if (result && result.AccessToken) {
       const response = NextResponse.json(
         { username: username },
         { status: 202 }
       );
       // Set a cookie with the username
       setCookie('username', username, { req, res: response });
+      setCookie('refreshToken', result.RefreshToken, { req, res: response });
+      setCookie('accessToken', result.AccessToken, { req, res: response });
       return response;
     } else {
       return NextResponse.json(

@@ -5,7 +5,8 @@ import { IoMdAddCircle, IoMdHome, IoMdPerson } from "react-icons/io";
 import Notecard from "./notecard";
 import Addnote from "./addnote";
 import Deletenote from "./deletenote";
-import { getCookie } from "cookies-next"; // Import getCookie from cookies-next
+import { getCookie, deleteCookie } from "cookies-next";
+import { revokeToken, logOut } from "@/utils/aws-auth";
 
 export default function Dash() {
   const [addNoteOpen, setAddNoteOpen] = useState(false);
@@ -33,6 +34,27 @@ export default function Dash() {
     const username = getCookie("username");
     setUsername(username || "");
   }, []);
+
+  // logout from session
+  const handleLogout = async () => {
+    const refreshToken = getCookie("refreshToken");
+    if (refreshToken) {
+      try {
+        // await revokeToken(refreshToken);
+        // await logOut(accessToken);
+        // Clear cookies
+        deleteCookie("username");
+        deleteCookie("accessToken");
+        deleteCookie("refreshToken");
+        // Redirect to login page
+        window.location.href = "/login"; // Update with the correct login route
+      } catch (error) {
+        console.error("Error logging out: ", error);
+      }
+    } else {
+      console.error("Refresh token not found");
+    }
+  };
 
   return (
     <>
@@ -67,7 +89,10 @@ export default function Dash() {
         <div className="w-5/6 p-5 flex flex-col gap-4">
           <div className="flex justify-between border-b border-black p-5 items-center">
             <h1 className="text-xl font-bold">My Notes</h1>
-            <button className="bg-black p-2 w-auto rounded hover:bg-red-600 text-md font-semibold text-white">
+            <button
+              onClick={handleLogout}
+              className="bg-black p-2 w-auto rounded hover:bg-red-600 text-md font-semibold text-white"
+            >
               Log out
             </button>
           </div>
