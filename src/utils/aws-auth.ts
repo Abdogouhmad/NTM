@@ -179,12 +179,8 @@ async function resetPassword(username: string, code: string, newpassword: string
 
 // maaan how can I log out
 async function logOut(accessToken: string) {
-  const params = {
-    ClientId: ConfigAws.COGNITO_CLIENT_ID,
-    AccessToken: accessToken,
-  };
   try {
-    const command = new GlobalSignOutCommand(params);
+    const command = new GlobalSignOutCommand({ AccessToken: accessToken });
     const response = await cognitoClient.send(command);
     console.log("Logout success: ", response);
     return response;
@@ -193,24 +189,8 @@ async function logOut(accessToken: string) {
     throw error;
   }
 }
-
 // revoke the shit
-async function revokeToken(refreshToken: string) {
-  const params = {
-    ClientId: ConfigAws.COGNITO_CLIENT_ID,
-    Token: refreshToken,
-  };
-  try {
-    const command = new RevokeTokenCommand(params);
-    const response = await cognitoClient.send(command);
-    console.log("Token revoked successfully:", response);
-    return response;
-  } catch (error) {
-    console.error("Error revoking token:", error);
-    throw error;
-  }
-}
 
 
-export { signIn, signUp, confirmSignUp, resetPassword, sendResetPassword, logOut, revokeToken }
+export { signIn, signUp, confirmSignUp, resetPassword, sendResetPassword, logOut }
 

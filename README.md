@@ -21,3 +21,5 @@ bun dev
 - [x] logout (hard coded)
 - [ ] middleware is implemented (should handle the accesstoken key should be verificed)
 - [x] display username in dashboard (hard coded using cookies)
+- [x] POST note is working fine atm
+- [ ] GET -> implemnent the UI for it

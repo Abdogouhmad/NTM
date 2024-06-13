@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       );
       // Set a cookie with the username
       setCookie('username', username, { req, res: response });
-      setCookie('refreshToken', result.RefreshToken, { req, res: response });
+      // setCookie('refreshToken', result.RefreshToken, { req, res: response });
       setCookie('accessToken', result.AccessToken, { req, res: response });
       return response;
     } else {

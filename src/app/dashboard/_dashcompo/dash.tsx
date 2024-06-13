@@ -6,7 +6,6 @@ import Notecard from "./notecard";
 import Addnote from "./addnote";
 import Deletenote from "./deletenote";
 import { getCookie, deleteCookie } from "cookies-next";
-import { revokeToken, logOut } from "@/utils/aws-auth";
 
 export default function Dash() {
   const [addNoteOpen, setAddNoteOpen] = useState(false);
@@ -37,15 +36,16 @@ export default function Dash() {
 
   // logout from session
   const handleLogout = async () => {
-    const refreshToken = getCookie("refreshToken");
-    if (refreshToken) {
+    // const refreshToken = getCookie("refreshToken");
+    const accessToken = getCookie("accessToken");
+    if (accessToken) {
       try {
         // await revokeToken(refreshToken);
-        // await logOut(accessToken);
+        // logOut(accessToken);
         // Clear cookies
         deleteCookie("username");
         deleteCookie("accessToken");
-        deleteCookie("refreshToken");
+        // deleteCookie("refreshToken");
         // Redirect to login page
         window.location.href = "/login"; // Update with the correct login route
       } catch (error) {

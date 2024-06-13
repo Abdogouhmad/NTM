@@ -5,7 +5,8 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEditDocument } from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
 import axios from "axios";
-
+import toast from "react-hot-toast";
+import { getCookie } from "cookies-next";
 // types for Addnote
 type AddNoteSchema = {
   title: string;
@@ -57,20 +58,51 @@ function Addnote({ onClose }) {
 
   // Handle add note
   const HandleAddNote: SubmitHandler<AddNoteSchema> = async (data) => {
-    // console the data
-    // console.log(data);
+    // get the cookie username as value
+    const username = getCookie("username");
+    // deconstract the values from the data
+    const { description, note, notetype, title } = data;
+
+    // inject all these into payload
+    const payload = {
+      title,
+      description,
+      notetype,
+      note,
+      username,
+    };
+
     try {
-      const resp = await axios.post("/api/addnote", data);
-      if (!resp) {
-        console.error("Can't add your note");
+      // post the payload to the /notes api
+      const resp = await axios.post(
+        "https://d98ufs9kmd.execute-api.us-east-1.amazonaws.com/prod/notes",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      // check the return of the axios
+      if (resp.status === 200 || resp.status === 202) {
+        toast.success("Note added successfully!");
       } else {
-        console.log("The data is logged 🎉");
-        reset();
+        console.error("Something went wrong:", resp.status);
+        toast.error("Failed to add note.");
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error.message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+      toast.error("An error occurred while adding the note.");
+    } finally {
+      reset();
     }
   };
+
   return (
     <div className="fixed z-50 bg-black/80 w-full h-screen flex flex-col items-center justify-center">
       <div className="w-3/6 mx-auto bg-white p-10 rounded">
