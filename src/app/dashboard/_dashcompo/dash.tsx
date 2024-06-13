@@ -8,6 +8,32 @@ import Deletenote from "./deletenote";
 import { getCookie, deleteCookie } from "cookies-next";
 
 export default function Dash() {
+  const notesData = {
+    notes: [
+      {
+        id: 1,
+        NoteType: "Today's notes",
+        Note: "hey man",
+        Title: "abdo",
+        Description: "cool",
+      },
+      {
+        id: 2,
+        NoteType: "Tomorrow's notes",
+        Note: "Discussed the project milestones, assigned tasks, and set deadlines for the next phase. Follow-up required on budget approval.",
+        Title: "Meeting Summary",
+        Description: "Summary of the meeting held on June 12th.",
+      },
+      {
+        id: 3,
+        NoteType: "This week's notes",
+        Note: "Discussed the project milestones, assigned tasks, and set deadlines for the next phase. Follow-up required on budget approval.",
+        Title: "Meeting Summary",
+        Description: "Summary of the meeting held on June 12th.",
+      },
+    ],
+  };
+
   const [addNoteOpen, setAddNoteOpen] = useState(false);
   const [deleteNoteOpen, setDeleteNoteOpen] = useState(false);
   const [username, setUsername] = useState("");
@@ -36,17 +62,11 @@ export default function Dash() {
 
   // logout from session
   const handleLogout = async () => {
-    // const refreshToken = getCookie("refreshToken");
     const accessToken = getCookie("accessToken");
     if (accessToken) {
       try {
-        // await revokeToken(refreshToken);
-        // logOut(accessToken);
-        // Clear cookies
         deleteCookie("username");
         deleteCookie("accessToken");
-        // deleteCookie("refreshToken");
-        // Redirect to login page
         window.location.href = "/login"; // Update with the correct login route
       } catch (error) {
         console.error("Error logging out: ", error);
@@ -58,10 +78,10 @@ export default function Dash() {
 
   return (
     <>
-      <div className="flex h-screen">
+      <div className="flex  h-screen">
         <div className="hidden bg-white w-1/6 md:flex flex-col justify-between py-10 items-center shadow-xl shadow-black/30">
           {/* Top section */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 ">
             <Link
               href={"/"}
               className="flex items-center gap-1 text-md cursor-pointer font-semibold hover:text-green-700"
@@ -98,34 +118,11 @@ export default function Dash() {
           </div>
           {/* the note cards are here */}
           <div className="bg-gray-50 shadow-lg shadow-black/20 p-5 rounded-sm">
-            <h1 className="text-xl font-bold">Today&apos;s Notes</h1>
-            <br />
-            <div className="flex flex-col gap-4">
-              <Notecard
-                onEditNote={handleAddNoteOpen}
-                onDeleteNote={handleDeleteNoteOpen}
-              />
-            </div>
-          </div>
-          <div className="bg-gray-50 shadow-lg shadow-black/20 p-5 rounded-sm">
-            <h1 className="text-xl font-bold">Tomorrow&apos;s Notes</h1>
-            <br />
-            <div className="flex flex-col gap-4">
-              <Notecard
-                onEditNote={handleAddNoteOpen}
-                onDeleteNote={handleDeleteNoteOpen}
-              />
-            </div>
-          </div>
-          <div className="bg-gray-50 shadow-lg shadow-black/20 p-5 rounded-sm">
-            <h1 className="text-xl font-bold">This Week&apos;s Notes</h1>
-            <br />
-            <div className="flex flex-col gap-4">
-              <Notecard
-                onEditNote={handleAddNoteOpen}
-                onDeleteNote={handleDeleteNoteOpen}
-              />
-            </div>
+            <Notecard
+              notesData={notesData}
+              onEditNote={handleAddNoteOpen}
+              onDeleteNote={handleDeleteNoteOpen}
+            />
           </div>
         </div>
         {addNoteOpen && <Addnote onClose={handleAddNoteClose} />}
