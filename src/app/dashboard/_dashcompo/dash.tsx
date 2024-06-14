@@ -6,37 +6,13 @@ import Notecard from "./notecard";
 import Addnote from "./addnote";
 import Deletenote from "./deletenote";
 import { getCookie, deleteCookie } from "cookies-next";
+import axios from "axios";
 
 export default function Dash() {
-  const notesData = {
-    notes: [
-      {
-        id: 1,
-        NoteType: "Today's notes",
-        Note: "hey man",
-        Title: "abdo",
-        Description: "cool",
-      },
-      {
-        id: 2,
-        NoteType: "Tomorrow's notes",
-        Note: "Discussed the project milestones, assigned tasks, and set deadlines for the next phase. Follow-up required on budget approval.",
-        Title: "Meeting Summary",
-        Description: "Summary of the meeting held on June 12th.",
-      },
-      {
-        id: 3,
-        NoteType: "This week's notes",
-        Note: "Discussed the project milestones, assigned tasks, and set deadlines for the next phase. Follow-up required on budget approval.",
-        Title: "Meeting Summary",
-        Description: "Summary of the meeting held on June 12th.",
-      },
-    ],
-  };
-
   const [addNoteOpen, setAddNoteOpen] = useState(false);
   const [deleteNoteOpen, setDeleteNoteOpen] = useState(false);
   const [username, setUsername] = useState("");
+  const [notes, setNotes] = useState([]);
 
   const handleAddNoteOpen = () => {
     setAddNoteOpen(true);
@@ -58,6 +34,9 @@ export default function Dash() {
     // Retrieve the username from the cookie
     const username = getCookie("username");
     setUsername(username || "");
+
+    // Fetch notes when component mounts
+    handleFetch();
   }, []);
 
   // logout from session
@@ -76,12 +55,29 @@ export default function Dash() {
     }
   };
 
+  // fetch the data
+  const handleFetch = async () => {
+    const API_URL =
+      "https://bcmkkuxdqf.execute-api.us-east-1.amazonaws.com/prod/note";
+
+    try {
+      const resp = await axios.get(API_URL);
+      const { notes } = resp.data;
+      setNotes(notes);
+    } catch (error) {
+      console.error("Error fetching notes: ", error);
+    }
+  };
+
+  // handle adding a new note
+  // ... (existing code)
+
   return (
     <>
-      <div className="flex  h-screen">
+      <div className="flex h-[100%]">
         <div className="hidden bg-white w-1/6 md:flex flex-col justify-between py-10 items-center shadow-xl shadow-black/30">
           {/* Top section */}
-          <div className="flex flex-col gap-2 ">
+          <div className="flex flex-col gap-2">
             <Link
               href={"/"}
               className="flex items-center gap-1 text-md cursor-pointer font-semibold hover:text-green-700"
@@ -100,9 +96,11 @@ export default function Dash() {
           {/* Bottom section */}
           <div className="flex items-center gap-1 text-xl cursor-pointer">
             <IoMdPerson className="text-2xl" />
-            <span className="first-letter:uppercase font-medium">
-              {username}
-            </span>
+            <div className="flex items-center">
+              <span className="first-letter:uppercase font-medium">
+                {username}
+              </span>
+            </div>
           </div>
         </div>
         {/* the notes are here */}
@@ -117,13 +115,11 @@ export default function Dash() {
             </button>
           </div>
           {/* the note cards are here */}
-          <div className="bg-gray-50 shadow-lg shadow-black/20 p-5 rounded-sm">
-            <Notecard
-              notesData={notesData}
-              onEditNote={handleAddNoteOpen}
-              onDeleteNote={handleDeleteNoteOpen}
-            />
-          </div>
+          <Notecard
+            notesData={{ notes }}
+            onEditNote={handleAddNoteOpen}
+            onDeleteNote={handleDeleteNoteOpen}
+          />
         </div>
         {addNoteOpen && <Addnote onClose={handleAddNoteClose} />}
         {deleteNoteOpen && <Deletenote setdeleteNote={handleDeleteNoteClose} />}

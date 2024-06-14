@@ -7,6 +7,7 @@ import { IoMdClose } from "react-icons/io";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { getCookie } from "cookies-next";
+
 // types for Addnote
 type AddNoteSchema = {
   title: string;
@@ -26,9 +27,9 @@ function Addnote({ onClose }) {
 
   // data form
   const NoteOptions = [
-    { value: "today", label: "Today's Notes" },
-    { value: "tomorrow", label: "Tomorrow's Notes" },
-    { value: "week", label: "This Week's Notes" },
+    { value: "Today's notes", label: "Today's Notes" },
+    { value: "Tomorrow's notes", label: "Tomorrow's Notes" },
+    { value: "This week's notes", label: "This Week's Notes" },
   ];
 
   const Notedata = [
@@ -62,7 +63,9 @@ function Addnote({ onClose }) {
     const username = getCookie("username");
     // deconstract the values from the data
     const { description, note, notetype, title } = data;
-
+    // url var
+    const API_URL =
+      "https://bcmkkuxdqf.execute-api.us-east-1.amazonaws.com/prod/note";
     // inject all these into payload
     const payload = {
       title,
@@ -74,15 +77,11 @@ function Addnote({ onClose }) {
 
     try {
       // post the payload to the /notes api
-      const resp = await axios.post(
-        "https://d98ufs9kmd.execute-api.us-east-1.amazonaws.com/prod/notes",
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const resp = await axios.post(API_URL, payload, {
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+      });
 
       // check the return of the axios
       if (resp.status === 200 || resp.status === 202) {
@@ -144,15 +143,15 @@ function Addnote({ onClose }) {
               </div>
             ))}
             <div>
-              <select className="w-full p-2 bg-zinc-100/50 rounded border border-gray-200">
+              <select
+                className="w-full p-2 bg-zinc-100/50 rounded border border-gray-200"
+                {...register("notetype" as keyof AddNoteSchema, {
+                  required: "Choose the data of the note",
+                })}
+              >
                 <option value="">Select note type</option>
                 {NoteOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    {...register("notetype" as keyof AddNoteSchema, {
-                      required: "Choose the data of the note",
-                    })}
-                  >
+                  <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
                 ))}
