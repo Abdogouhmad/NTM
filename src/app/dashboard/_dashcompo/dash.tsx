@@ -58,7 +58,7 @@ export default function Dash() {
   // fetch the data
   const handleFetch = async () => {
     const API_URL =
-      "https://bcmkkuxdqf.execute-api.us-east-1.amazonaws.com/prod/note";
+      "https://w1zmls7b31.execute-api.us-east-1.amazonaws.com/prod/note";
 
     try {
       const resp = await axios.get(API_URL);
@@ -97,9 +97,7 @@ export default function Dash() {
           <div className="flex items-center gap-1 text-xl cursor-pointer">
             <IoMdPerson className="text-2xl" />
             <div className="flex items-center">
-              <span className="first-letter:uppercase font-medium">
-                {username}
-              </span>
+              <span className="font-medium">{username}</span>
             </div>
           </div>
         </div>
