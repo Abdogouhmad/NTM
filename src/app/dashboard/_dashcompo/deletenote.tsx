@@ -1,16 +1,29 @@
-"use client";
 import React from "react";
+import { Note } from "./dash";
 
-function Deletenote({ setdeleteNote }) {
+interface DeletenoteProps {
+  note: Note | null;
+  onClose: () => void;
+  onConfirmDelete: () => void;
+}
+
+const Deletenote: React.FC<DeletenoteProps> = ({
+  note,
+  onClose,
+  onConfirmDelete,
+}) => {
+  if (!note) return null;
+
   return (
     <div className="fixed z-50 bg-slate-400/80 w-full h-screen flex flex-col items-center justify-center">
       <div className="w-3/6 mx-auto bg-white p-10 rounded flex flex-col items-center gap-4">
         <h1>Delete Note</h1>
+        <p>Are you sure you want to delete the note "{note.Title}"?</p>
         <div className="flex gap-4">
           <button
             className="bg-red-500 text-white p-2 w-[100px] rounded"
             onClick={() => {
-              setdeleteNote(false);
+              onConfirmDelete();
             }}
           >
             Yes
@@ -18,7 +31,7 @@ function Deletenote({ setdeleteNote }) {
           <button
             className="bg-green-500 text-white p-2 w-[100px] rounded"
             onClick={() => {
-              setdeleteNote(false);
+              onClose();
             }}
           >
             No
@@ -27,6 +40,6 @@ function Deletenote({ setdeleteNote }) {
       </div>
     </div>
   );
-}
+};
 
 export default Deletenote;
