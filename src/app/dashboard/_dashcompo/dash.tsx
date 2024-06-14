@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { IoMdAddCircle, IoMdHome, IoMdPerson } from "react-icons/io";
 import Notecard from "./notecard";
@@ -7,28 +6,26 @@ import Addnote from "./addnote";
 import Deletenote from "./deletenote";
 import { getCookie, deleteCookie } from "cookies-next";
 import axios from "axios";
+import Link from "next/link";
+
+export interface Note {
+  id: string;
+  NoteType: string;
+  Note: string;
+  Title: string;
+  Description: string;
+}
+
+export interface NotesData {
+  notes: Note[];
+}
 
 export default function Dash() {
   const [addNoteOpen, setAddNoteOpen] = useState(false);
   const [deleteNoteOpen, setDeleteNoteOpen] = useState(false);
   const [username, setUsername] = useState("");
-  const [notes, setNotes] = useState([]);
-
-  const handleAddNoteOpen = () => {
-    setAddNoteOpen(true);
-  };
-
-  const handleAddNoteClose = () => {
-    setAddNoteOpen(false);
-  };
-
-  const handleDeleteNoteOpen = () => {
-    setDeleteNoteOpen(true);
-  };
-
-  const handleDeleteNoteClose = () => {
-    setDeleteNoteOpen(false);
-  };
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
 
   useEffect(() => {
     // Retrieve the username from the cookie
@@ -39,14 +36,59 @@ export default function Dash() {
     handleFetch();
   }, []);
 
-  // logout from session
+  // Fetch notes from API
+  const handleFetch = async () => {
+    const API_URL =
+      "https://w1zmls7b31.execute-api.us-east-1.amazonaws.com/prod/note";
+
+    try {
+      const resp = await axios.get<NotesData>(API_URL);
+      setNotes(resp.data.notes);
+    } catch (error) {
+      console.error("Error fetching notes: ", error);
+    }
+  };
+
+  // Handle opening the delete note confirmation dialog
+  const handleDeleteNoteOpen = (note: Note) => {
+    setNoteToDelete(note);
+    setDeleteNoteOpen(true);
+  };
+
+  // Handle closing the delete note confirmation dialog
+  const handleDeleteNoteClose = () => {
+    setDeleteNoteOpen(false);
+    setNoteToDelete(null);
+  };
+
+  // Handle confirming the deletion of the note
+  const handleConfirmDeleteNote = async () => {
+    if (noteToDelete) {
+      const API_URL =
+        "https://w1zmls7b31.execute-api.us-east-1.amazonaws.com/prod/note";
+
+      try {
+        await axios.delete(`${API_URL}?id=${noteToDelete.id}`);
+        // Refresh the notes list after deletion
+        handleFetch();
+      } catch (error) {
+        console.error("Error deleting note: ", error);
+      } finally {
+        // Close the delete confirmation dialog
+        setDeleteNoteOpen(false);
+        setNoteToDelete(null);
+      }
+    }
+  };
+
+  // Handle logging out the user
   const handleLogout = async () => {
     const accessToken = getCookie("accessToken");
     if (accessToken) {
       try {
         deleteCookie("username");
         deleteCookie("accessToken");
-        window.location.href = "/login"; // Update with the correct login route
+        window.location.href = "/login"; // Update with your login route
       } catch (error) {
         console.error("Error logging out: ", error);
       }
@@ -55,35 +97,27 @@ export default function Dash() {
     }
   };
 
-  // fetch the data
-  const handleFetch = async () => {
-    const API_URL =
-      "https://w1zmls7b31.execute-api.us-east-1.amazonaws.com/prod/note";
-
-    try {
-      const resp = await axios.get(API_URL);
-      const { notes } = resp.data;
-      setNotes(notes);
-    } catch (error) {
-      console.error("Error fetching notes: ", error);
-    }
+  // Handle opening the add note form
+  const handleAddNoteOpen = () => {
+    setAddNoteOpen(true);
   };
 
-  // handle adding a new note
-  // ... (existing code)
+  // Handle closing the add note form
+  const handleAddNoteClose = () => {
+    setAddNoteOpen(false);
+  };
 
   return (
     <>
-      <div className="flex h-[100%]">
+      <div className="flex h-screen">
         <div className="hidden bg-white w-1/6 md:flex flex-col justify-between py-10 items-center shadow-xl shadow-black/30">
-          {/* Top section */}
+          {/* Navigation section */}
           <div className="flex flex-col gap-2">
-            <Link
-              href={"/"}
-              className="flex items-center gap-1 text-md cursor-pointer font-semibold hover:text-green-700"
-            >
-              <IoMdHome className="text-2xl" />
-              Home
+            <Link href={"/"} passHref>
+              <div className="flex items-center gap-1 text-md cursor-pointer font-semibold hover:text-green-700">
+                <IoMdHome className="text-2xl" />
+                Home
+              </div>
             </Link>
             <span
               className="flex items-center gap-1 text-md cursor-pointer font-semibold hover:text-green-700"
@@ -93,7 +127,7 @@ export default function Dash() {
               Add Note
             </span>
           </div>
-          {/* Bottom section */}
+          {/* User section */}
           <div className="flex items-center gap-1 text-xl cursor-pointer">
             <IoMdPerson className="text-2xl" />
             <div className="flex items-center">
@@ -101,7 +135,7 @@ export default function Dash() {
             </div>
           </div>
         </div>
-        {/* the notes are here */}
+        {/* Main content area */}
         <div className="w-5/6 p-5 flex flex-col gap-4">
           <div className="flex justify-between border-b border-black p-5 items-center">
             <h1 className="text-xl font-bold">My Notes</h1>
@@ -112,15 +146,23 @@ export default function Dash() {
               Log out
             </button>
           </div>
-          {/* the note cards are here */}
+          {/* Note cards */}
           <Notecard
             notesData={{ notes }}
-            onEditNote={handleAddNoteOpen}
+            onEditNote={handleAddNoteOpen} // Replace with your edit note handler
             onDeleteNote={handleDeleteNoteOpen}
           />
         </div>
+        {/* Add note form */}
         {addNoteOpen && <Addnote onClose={handleAddNoteClose} />}
-        {deleteNoteOpen && <Deletenote setdeleteNote={handleDeleteNoteClose} />}
+        {/* Delete confirmation dialog */}
+        {deleteNoteOpen && (
+          <Deletenote
+            note={noteToDelete}
+            onClose={handleDeleteNoteClose}
+            onConfirmDelete={handleConfirmDeleteNote}
+          />
+        )}
       </div>
     </>
   );
