@@ -36,9 +36,9 @@ const Notecard: React.FC<NotecardProps> = ({
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       {Object.values(groupedNotes).map((notesList, index) => (
-        <div key={index}>
+        <div key={index} className="bg-zinc-100 rounded p-3">
           <h1 className="text-xl font-bold">
             {notesList[0]?.NoteType || "Other Notes"}
           </h1>
