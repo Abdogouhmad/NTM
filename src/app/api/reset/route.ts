@@ -1,5 +1,5 @@
-import { resetPassword } from '@/utils/aws-auth';
-import { NextRequest, NextResponse } from 'next/server';
+import { resetPassword } from "@/utils/aws-auth";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,21 +10,20 @@ export async function POST(req: NextRequest) {
 
     if (result) {
       return NextResponse.json(
-        { message: 'The password updated' },
+        { message: "The password updated" },
         { status: 202 }
       );
     } else {
       return NextResponse.json(
-        { message: 'Something wrong while resting password' },
+        { message: "Something wrong while resting password" },
         { status: 401 }
       );
     }
   } catch (error) {
-    console.error('Sign-in error:', error);
+    console.error("Sign-in error:", error);
     return NextResponse.json(
-      { error: 'Something went wrong', details: error.message },
+      { error: "Something went wrong", details: error },
       { status: 400 }
     );
   }
 }
-

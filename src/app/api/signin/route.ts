@@ -1,6 +1,6 @@
-import { signIn } from '@/utils/aws-auth';
-import { setCookie } from 'cookies-next';
-import { NextRequest, NextResponse } from 'next/server';
+import { signIn } from "@/utils/aws-auth";
+import { setCookie } from "cookies-next";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,20 +13,20 @@ export async function POST(req: NextRequest) {
         { status: 202 }
       );
       // Set a cookie with the username
-      setCookie('username', username, { req, res: response });
+      setCookie("username", username, { req, res: response });
       // setCookie('refreshToken', result.RefreshToken, { req, res: response });
-      setCookie('accessToken', result.AccessToken, { req, res: response });
+      setCookie("accessToken", result.AccessToken, { req, res: response });
       return response;
     } else {
       return NextResponse.json(
-        { message: 'Sign In process failed' },
+        { message: "Sign In process failed" },
         { status: 401 }
       );
     }
   } catch (error) {
-    console.error('Sign-in error:', error);
+    console.error("Sign-in error:", error);
     return NextResponse.json(
-      { error: 'Something went wrong', details: error.message },
+      { error: "Something went wrong", details: error },
       { status: 400 }
     );
   }

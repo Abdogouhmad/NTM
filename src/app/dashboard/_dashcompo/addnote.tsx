@@ -15,8 +15,11 @@ type AddNoteSchema = {
   notetype: string; // either for twm or today (data I mean)
   note: string;
 };
-
-function Addnote({ onClose }) {
+// Define the props for Addnote
+interface AddnoteProps {
+  onClose: () => void; // Assuming onClose is a function that takes no arguments and returns nothing
+}
+function Addnote({ onClose }: AddnoteProps) {
   // use form here
   const {
     register,
@@ -92,7 +95,7 @@ function Addnote({ onClose }) {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.message);
+        console.error("Axios error:", error);
       } else {
         console.error("Unexpected error:", error);
       }

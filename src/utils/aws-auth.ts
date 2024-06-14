@@ -1,11 +1,21 @@
-import { CognitoIdentityProviderClient, InitiateAuthCommand, SignUpCommand, ConfirmSignUpCommand, AuthFlowType, ForgotPasswordCommand, ConfirmForgotPasswordCommand, GlobalSignOutCommand, RevokeTokenCommand } from "@aws-sdk/client-cognito-identity-provider"
+import {
+  CognitoIdentityProviderClient,
+  InitiateAuthCommand,
+  SignUpCommand,
+  ConfirmSignUpCommand,
+  AuthFlowType,
+  ForgotPasswordCommand,
+  ConfirmForgotPasswordCommand,
+  GlobalSignOutCommand,
+  RevokeTokenCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
 
 // Define the configuration type
 type AwsConfigType = {
   COGNITO_CLIENT_ID: string;
   AWS_REGION: string;
   COGNITO_USER_POOL_ID: string;
-}
+};
 
 // Load and validate environment variables
 const loadConfig = (): AwsConfigType => {
@@ -21,27 +31,24 @@ const loadConfig = (): AwsConfigType => {
   }
 
   if (!COGNITO_USER_POOL_ID) {
-    throw new Error("Missing required environment variable: COGNITO_USER_POOL_ID");
+    throw new Error(
+      "Missing required environment variable: COGNITO_USER_POOL_ID"
+    );
   }
   return {
     COGNITO_CLIENT_ID,
     AWS_REGION,
     COGNITO_USER_POOL_ID,
   };
-}
+};
 
 // Load configuration
 const ConfigAws = loadConfig();
-
-
 
 // v3 JS aws-sdk
 const cognitoClient = new CognitoIdentityProviderClient({
   region: ConfigAws.AWS_REGION,
 });
-
-
-
 
 // SignUp function v3
 async function signUp(username: string, email: string, password: string) {
@@ -51,7 +58,7 @@ async function signUp(username: string, email: string, password: string) {
     Password: password,
     UserAttributes: [
       {
-        Name: 'email',
+        Name: "email",
         Value: email,
       },
     ],
@@ -88,7 +95,7 @@ async function confirmSignUp(username: string, code: string) {
 // SignIn function aws-sdk v3
 async function signIn(identifier: string, password: string) {
   const params = {
-    AuthFlow: 'USER_PASSWORD_AUTH' as AuthFlowType,
+    AuthFlow: "USER_PASSWORD_AUTH" as AuthFlowType,
     ClientId: ConfigAws.COGNITO_CLIENT_ID,
     AuthParameters: {
       USERNAME: identifier,
@@ -108,7 +115,7 @@ async function signIn(identifier: string, password: string) {
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Error signing in: ", error.message);
+      console.error("Error signing in: ", error);
     } else {
       console.error("Error signing in: ", error);
     }
@@ -127,13 +134,15 @@ async function sendResetPassword(username: string) {
     const command = new ForgotPasswordCommand(param);
     const response = await cognitoClient.send(command);
     if (response) {
-      return response
+      return response;
     } else {
-      console.error("There is error sending reset password email to you check later");
+      console.error(
+        "There is error sending reset password email to you check later"
+      );
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Error signing in: ", error.message);
+      console.error("Error signing in: ", error);
     } else {
       console.error("Error signing in: ", error);
     }
@@ -142,7 +151,11 @@ async function sendResetPassword(username: string) {
 }
 
 // reset the password
-async function resetPassword(username: string, code: string, newpassword: string) {
+async function resetPassword(
+  username: string,
+  code: string,
+  newpassword: string
+) {
   if (!username) {
     throw new Error("Username is required");
   }
@@ -156,26 +169,25 @@ async function resetPassword(username: string, code: string, newpassword: string
     ClientId: ConfigAws.COGNITO_CLIENT_ID,
     Username: username,
     ConfirmationCode: code,
-    Password: newpassword
-  }
+    Password: newpassword,
+  };
   try {
     const command = new ConfirmForgotPasswordCommand(param);
     const response = await cognitoClient.send(command);
     if (response) {
-      return response
+      return response;
     } else {
       console.error("There is error sending reseting password");
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Error resting password: ", error.message);
+      console.error("Error resting password: ", error);
     } else {
       console.error("Error resting password: ", error);
     }
     throw error;
   }
 }
-
 
 // maaan how can I log out
 async function logOut(accessToken: string) {
@@ -191,6 +203,11 @@ async function logOut(accessToken: string) {
 }
 // revoke the shit
 
-
-export { signIn, signUp, confirmSignUp, resetPassword, sendResetPassword, logOut }
-
+export {
+  signIn,
+  signUp,
+  confirmSignUp,
+  resetPassword,
+  sendResetPassword,
+  logOut,
+};

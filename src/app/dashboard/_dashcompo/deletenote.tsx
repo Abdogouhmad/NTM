@@ -18,7 +18,9 @@ const Deletenote: React.FC<DeletenoteProps> = ({
     <div className="fixed z-50 bg-slate-400/80 w-full h-screen flex flex-col items-center justify-center">
       <div className="w-3/6 mx-auto bg-white p-10 rounded flex flex-col items-center gap-4">
         <h1>Delete Note</h1>
-        <p>Are you sure you want to delete the note "{note.Title}"?</p>
+        <p>
+          Are you sure you want to delete the note &quot;{note.Title}&quot;?
+        </p>
         <div className="flex gap-4">
           <button
             className="bg-red-500 text-white p-2 w-[100px] rounded"

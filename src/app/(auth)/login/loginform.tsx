@@ -107,7 +107,7 @@ export default function SignInForm() {
           Log In
         </button>
         <Link href="/signup" className="text-blue-600 font-medium text-md">
-          Don't have an account yet?
+          Don&apos;t have an account yet?
         </Link>
       </form>
     </>
