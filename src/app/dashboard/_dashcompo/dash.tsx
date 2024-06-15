@@ -22,13 +22,13 @@ export interface NotesData {
 }
 
 export default function Dash() {
-  const [addNoteOpen, setAddNoteOpen] = useState(false);
-  const [editNoteOpen, setEditNoteOpen] = useState(false);
-  const [deleteNoteOpen, setDeleteNoteOpen] = useState(false);
-  const [username, setUsername] = useState("");
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [noteToEdit, setNoteToEdit] = useState<Note | null>(null);
-  const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
+  const [addNoteOpen, setAddNoteOpen] = useState(false); // for add note to be open
+  const [editNoteOpen, setEditNoteOpen] = useState(false); // edit note to be open
+  const [deleteNoteOpen, setDeleteNoteOpen] = useState(false); // to delete note to be open
+  const [username, setUsername] = useState(""); // username to be captured
+  const [notes, setNotes] = useState<Note[]>([]); // note data to be passed
+  const [noteToEdit, setNoteToEdit] = useState<Note | null>(null); // edit note data (id is passed here)
+  const [noteToDelete, setNoteToDelete] = useState<Note | null>(null); // the note to be deleted
 
   useEffect(() => {
     const username = getCookie("username");
@@ -39,7 +39,7 @@ export default function Dash() {
 
   const handleFetch = async () => {
     const API_URL =
-      "https://mm0s9nd343.execute-api.us-east-1.amazonaws.com/prod/note";
+      "https://py8oxzmsth.execute-api.us-east-1.amazonaws.com/prod/note";
 
     try {
       const resp = await axios.get<NotesData>(API_URL);
@@ -49,20 +49,23 @@ export default function Dash() {
     }
   };
 
+  // open the delete pop up
   const handleDeleteNoteOpen = (note: Note) => {
     setNoteToDelete(note);
     setDeleteNoteOpen(true);
   };
 
+  // close the delete pop up
   const handleDeleteNoteClose = () => {
     setDeleteNoteOpen(false);
     setNoteToDelete(null);
   };
 
+  // confirm the delete
   const handleConfirmDeleteNote = async () => {
     if (noteToDelete) {
       const API_URL =
-        "https://mm0s9nd343.execute-api.us-east-1.amazonaws.com/prod/note";
+        "https://py8oxzmsth.execute-api.us-east-1.amazonaws.com/prod/note";
 
       try {
         await axios.delete(`${API_URL}?id=${noteToDelete.id}`);
@@ -76,6 +79,7 @@ export default function Dash() {
     }
   };
 
+  // logout function
   const handleLogout = async () => {
     const accessToken = getCookie("accessToken");
     if (accessToken) {
@@ -91,23 +95,27 @@ export default function Dash() {
     }
   };
 
+  // add note open pop up
   const handleAddNoteOpen = () => {
     setAddNoteOpen(true);
   };
-
+  // add note close pop up
   const handleAddNoteClose = () => {
     setAddNoteOpen(false);
   };
 
+  // edit note pop up open
   const handleEditNoteOpen = (note: Note) => {
     if (!note.id) {
       console.error("Note ID is missing:", note);
       return;
     }
+    console.log(note.id);
     setNoteToEdit(note);
     setEditNoteOpen(true);
   };
 
+  // edit note close pop up
   const handleEditNoteClose = () => {
     setEditNoteOpen(false);
     setNoteToEdit(null);

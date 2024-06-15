@@ -11,10 +11,10 @@ import { Note } from "./dash"; // Import Note interface from dash
 
 // types for EditNoteSchema
 type EditNoteSchema = {
-  title: string;
-  description: string;
-  notetype: string; // either for twm or today (data I mean)
-  note: string;
+  Title: string;
+  Description: string;
+  NoteType: string; // either for twm or today (data I mean)
+  Note: string;
 };
 
 // Define the props for EditNote
@@ -34,10 +34,10 @@ const Editnote: React.FC<EditNoteProps> = ({ note, onClose }) => {
 
   useEffect(() => {
     if (note) {
-      setValue("title", note.Title);
-      setValue("description", note.Description);
-      setValue("notetype", note.NoteType);
-      setValue("note", note.Note);
+      setValue("Title", note.Title);
+      setValue("Description", note.Description);
+      setValue("NoteType", note.NoteType);
+      setValue("Note", note.Note);
     }
   }, [note, setValue]);
 
@@ -73,22 +73,23 @@ const Editnote: React.FC<EditNoteProps> = ({ note, onClose }) => {
   ];
 
   const HandleEditNote: SubmitHandler<EditNoteSchema> = async (data) => {
-    const username = getCookie("username");
-    const { description, note: noteContent, notetype, title } = data;
-
+    const Username = getCookie("username");
+    const { Description, Note, NoteType, Title } = data;
     // Ensure that the note ID is correctly included in the API URL
-    const API_URL = `https://mm0s9nd343.execute-api.us-east-1.amazonaws.com/prod/note?id=${note?.id}`;
+    const id = note?.id;
+    const API_URL = `https://py8oxzmsth.execute-api.us-east-1.amazonaws.com/prod/note`;
 
     const payload = {
-      title,
-      description,
-      notetype,
-      note: noteContent,
-      username,
+      id,
+      Title,
+      Description,
+      NoteType,
+      Note,
+      Username,
     };
-
+    console.log(payload);
     try {
-      const resp = await axios.patch(API_URL, payload, {
+      const resp = await axios.put(API_URL, payload, {
         headers: { "Content-Type": "application/json" },
       });
 
