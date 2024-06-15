@@ -29,17 +29,7 @@ const Editnote: React.FC<EditNoteProps> = ({ note, onClose }) => {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    setValue,
   } = useForm<EditNoteSchema>();
-
-  useEffect(() => {
-    if (note) {
-      setValue("Title", note.Title);
-      setValue("Description", note.Description);
-      setValue("NoteType", note.NoteType);
-      setValue("Note", note.Note);
-    }
-  }, [note, setValue]);
 
   const NoteOptions = [
     { value: "Today's notes", label: "Today's Notes" },
@@ -47,35 +37,9 @@ const Editnote: React.FC<EditNoteProps> = ({ note, onClose }) => {
     { value: "This week's notes", label: "This Week's Notes" },
   ];
 
-  const Notedata = [
-    {
-      id: 1,
-      type: "text",
-      plc: "Title",
-      register: "title",
-      req: "Please enter the title",
-      max: 20,
-      msgmax: "max characters allowed are 20",
-      min: 2,
-      msgmin: "min characters allowed are 2",
-    },
-    {
-      id: 2,
-      type: "text",
-      plc: "Description",
-      register: "description",
-      req: "Please enter the description",
-      max: 50,
-      msgmax: "max characters allowed are 50",
-      min: 2,
-      msgmin: "min characters allowed are 2",
-    },
-  ];
-
   const HandleEditNote: SubmitHandler<EditNoteSchema> = async (data) => {
     const Username = getCookie("username");
     const { Description, Note, NoteType, Title } = data;
-    // Ensure that the note ID is correctly included in the API URL
     const id = note?.id;
     const API_URL = `https://py8oxzmsth.execute-api.us-east-1.amazonaws.com/prod/note`;
 
@@ -127,58 +91,50 @@ const Editnote: React.FC<EditNoteProps> = ({ note, onClose }) => {
         <form onSubmit={handleSubmit(HandleEditNote)}>
           <div className="flex flex-col gap-4 mt-5">
             <h1 className="text-xl font-semibold">Edit Note</h1>
-            {Notedata.map((field) => (
-              <div key={field.id}>
-                <input
-                  className="bg-zinc-100/50 p-2 border border-gray-200 rounded w-full"
-                  type={field.type}
-                  placeholder={field.plc}
-                  {...register(field.register as keyof EditNoteSchema, {
-                    required: field.req,
-                    maxLength: { value: field.max, message: field.msgmax },
-                    minLength: { value: field.min, message: field.msgmin },
-                  })}
-                />
-                {errors[field.register as keyof EditNoteSchema] && (
-                  <p className="text-red-500 mt-2">
-                    {errors[field.register as keyof EditNoteSchema]?.message}
-                  </p>
-                )}
-              </div>
-            ))}
-            <div>
-              <select
-                className="w-full p-2 bg-zinc-100/50 rounded border border-gray-200"
-                {...register("notetype" as keyof EditNoteSchema, {
-                  required: "Choose the data of the note",
-                })}
-              >
-                <option value="">Select note type</option>
-                {NoteOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              {errors["notetype" as keyof EditNoteSchema] && (
-                <p className="text-red-500 mt-2">
-                  {errors["notetype" as keyof EditNoteSchema]?.message}
-                </p>
-              )}
-            </div>
+            <input
+              className="bg-zinc-100/50 p-2 border border-gray-200 rounded w-full"
+              type="text"
+              placeholder="Title"
+              {...register("Title", { required: true })}
+              defaultValue={note?.Title}
+            />
+            {errors.Title && (
+              <p className="text-red-500 mt-2">{errors.Title?.message}</p>
+            )}
+            <input
+              className="bg-zinc-100/50 p-2 border border-gray-200 rounded w-full"
+              type="text"
+              placeholder="Description"
+              {...register("Description", { required: true })}
+              defaultValue={note?.Description}
+            />
+            {errors.Description && (
+              <p className="text-red-500 mt-2">{errors.Description?.message}</p>
+            )}
+            <select
+              className="w-full p-2 bg-zinc-100/50 rounded border border-gray-200"
+              {...register("NoteType", { required: true })}
+              defaultValue={note?.NoteType}
+            >
+              <option value="">Select note type</option>
+              {NoteOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            {errors.NoteType && (
+              <p className="text-red-500 mt-2">{errors.NoteType?.message}</p>
+            )}
             <textarea
               rows={5}
               className="block p-2.5 w-full bg-zinc-100 rounded-lg border border-gray-300"
               placeholder="Write your Notes here..."
-              {...register("note" as keyof EditNoteSchema, {
-                required: "Leave a note that is important",
-                minLength: { value: 1, message: "At least one character man!" },
-              })}
+              {...register("Note", { required: true })}
+              defaultValue={note?.Note}
             />
-            {errors["note" as keyof EditNoteSchema] && (
-              <p className="text-red-500 mt-2">
-                {errors["note" as keyof EditNoteSchema]?.message}
-              </p>
+            {errors.Note && (
+              <p className="text-red-500 mt-2">{errors.Note?.message}</p>
             )}
             <div className="flex justify-end">
               <button

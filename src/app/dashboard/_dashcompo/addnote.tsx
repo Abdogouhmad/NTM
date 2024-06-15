@@ -19,6 +19,7 @@ type AddNoteSchema = {
 interface AddnoteProps {
   onClose: () => void; // Assuming onClose is a function that takes no arguments and returns nothing
 }
+
 function Addnote({ onClose }: AddnoteProps) {
   // use form here
   const {
