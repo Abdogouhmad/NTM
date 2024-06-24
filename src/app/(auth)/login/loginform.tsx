@@ -4,6 +4,8 @@ import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { signIn } from "@/utils/aws-auth"
+import { setCookie } from "cookies-next";
 
 type FormSchema = {
   username: string;
@@ -48,12 +50,17 @@ export default function SignInForm() {
 
   const submitform: SubmitHandler<FormSchema> = async (data) => {
     try {
-      const resp = await axios.post("/api/signin", data);
-      if (resp.status === 202) {
+      const { username, password } = data;
+      const resp = await signIn(username, password);
+      // const resp = await axios.post("/api/signin", data);
+      if (resp && resp.AccessToken) {
+        setCookie("username", username);
+        setCookie("accessToken", resp.AccessToken);
+
         toast.success("Welcome back");
         router.push("/dashboard");
       } else {
-        toast.error("Faild to log in: ", resp.data.message);
+        toast.error("Faild to log in");
       }
     } catch (e) {
       toast.error("Faild to log in");
