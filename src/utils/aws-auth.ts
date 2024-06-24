@@ -16,33 +16,13 @@ type AwsConfigType = {
   COGNITO_USER_POOL_ID: string;
 };
 
-// Load and validate environment variables
-const loadConfig = (): AwsConfigType => {
-  const COGNITO_CLIENT_ID = process.env.COGNITO_CLIENT_ID;
-  const REGION = process.env.REGION;
-  const COGNITO_USER_POOL_ID = process.env.COGNITO_USER_POOL_ID;
-
-  if (!COGNITO_CLIENT_ID) {
-    throw new Error("Missing required environment variable: COGNITO_CLIENT_ID");
-  }
-  if (!REGION) {
-    throw new Error("Missing required environment variable: AWS_REGION");
-  }
-
-  if (!COGNITO_USER_POOL_ID) {
-    throw new Error(
-      "Missing required environment variable: COGNITO_USER_POOL_ID"
-    );
-  }
-  return {
-    COGNITO_CLIENT_ID,
-    REGION,
-    COGNITO_USER_POOL_ID,
-  };
-};
 
 // Load configuration
-const ConfigAws = loadConfig();
+const ConfigAws: AwsConfigType = {
+  COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID!,
+  REGION : process.env.REGION!,
+  COGNITO_USER_POOL_ID : process.env.COGNITO_USER_POOL_ID!,
+};
 
 // v3 JS aws-sdk
 const cognitoClient = new CognitoIdentityProviderClient({
