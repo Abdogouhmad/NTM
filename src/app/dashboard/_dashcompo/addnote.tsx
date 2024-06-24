@@ -69,7 +69,7 @@ function Addnote({ onClose }: AddnoteProps) {
     const { description, note, notetype, title } = data;
     // url var
     const API_URL =
-      "https://py8oxzmsth.execute-api.us-east-1.amazonaws.com/prod/note";
+      "https://9q2n41kupj.execute-api.us-east-1.amazonaws.com/dev/note";
     // inject all these into payload
     const payload = {
       title,

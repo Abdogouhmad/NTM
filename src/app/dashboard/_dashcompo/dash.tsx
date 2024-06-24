@@ -39,7 +39,7 @@ export default function Dash() {
 
   const handleFetch = async () => {
     const API_URL =
-      "https://py8oxzmsth.execute-api.us-east-1.amazonaws.com/prod/note";
+      "https://9q2n41kupj.execute-api.us-east-1.amazonaws.com/dev/note";
 
     try {
       const resp = await axios.get<NotesData>(API_URL);
@@ -65,7 +65,7 @@ export default function Dash() {
   const handleConfirmDeleteNote = async () => {
     if (noteToDelete) {
       const API_URL =
-        "https://py8oxzmsth.execute-api.us-east-1.amazonaws.com/prod/note";
+        "https://9q2n41kupj.execute-api.us-east-1.amazonaws.com/dev/note";
 
       try {
         await axios.delete(`${API_URL}?id=${noteToDelete.id}`);
