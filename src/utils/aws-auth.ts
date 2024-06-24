@@ -7,26 +7,25 @@ import {
   ForgotPasswordCommand,
   ConfirmForgotPasswordCommand,
   GlobalSignOutCommand,
-  RevokeTokenCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
 
 // Define the configuration type
 type AwsConfigType = {
   COGNITO_CLIENT_ID: string;
-  AWS_REGION: string;
+  REGION: string;
   COGNITO_USER_POOL_ID: string;
 };
 
 // Load and validate environment variables
 const loadConfig = (): AwsConfigType => {
   const COGNITO_CLIENT_ID = process.env.COGNITO_CLIENT_ID;
-  const AWS_REGION = process.env.AWS_REGION;
+  const REGION = process.env.REGION;
   const COGNITO_USER_POOL_ID = process.env.COGNITO_USER_POOL_ID;
 
   if (!COGNITO_CLIENT_ID) {
     throw new Error("Missing required environment variable: COGNITO_CLIENT_ID");
   }
-  if (!AWS_REGION) {
+  if (!REGION) {
     throw new Error("Missing required environment variable: AWS_REGION");
   }
 
@@ -37,7 +36,7 @@ const loadConfig = (): AwsConfigType => {
   }
   return {
     COGNITO_CLIENT_ID,
-    AWS_REGION,
+    REGION,
     COGNITO_USER_POOL_ID,
   };
 };
@@ -47,7 +46,7 @@ const ConfigAws = loadConfig();
 
 // v3 JS aws-sdk
 const cognitoClient = new CognitoIdentityProviderClient({
-  region: ConfigAws.AWS_REGION,
+  region: ConfigAws.REGION,
 });
 
 // SignUp function v3
