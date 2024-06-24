@@ -3,6 +3,7 @@ import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { signUp } from "@/utils/aws-auth";
 // the type of schema
 type FormSchema = {
   username: string;
@@ -64,15 +65,14 @@ export default function SignUpForm() {
   // handle submit
   const submitform: SubmitHandler<FormSchema> = async (data) => {
     try {
-      // post the form at the backend
-      const resp = await axios.post("/api/signup", data);
-      // if the resp went well clear the forma and redirect to confirmation
-      if (resp.status === 202 || 200) {
+      const { username, email, password } = data;
+      const resp = await signUp(username, email, password);
+      if (resp.$metadata) {
         toast.success("check your inbox for confirmation code");
         reset();
         router.push("/confirmation");
       } else {
-        toast.error("signup failed ", resp.data.message);
+        toast.error("signup failed");
       }
     } catch (e) {
       console.error(e);

@@ -1,12 +1,13 @@
 "use client";
-import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { confirmSignUp } from "@/utils/aws-auth";
 
 // type
 type ConfiSchema = {
-  code: number;
+  code: string;
+  username: string;
 };
 
 export default function Page() {
@@ -48,14 +49,14 @@ export default function Page() {
   // handle submit
   const submitform: SubmitHandler<ConfiSchema> = async (data) => {
     try {
-      const resp = await axios.post("/api/confirm", data);
-      // if the resp went well clear the forma and redirect to confirmation
-      if (resp.status === 202 || 200) {
+      const { code, username } = data;
+      const resp = await confirmSignUp(username, code);
+      if (resp) {
         toast.success("well Confirmed 🎉");
         reset();
         router.push("/login");
       } else {
-        toast.error("Confirmation failed:", resp.data.message);
+        toast.error("Confirmation failed");
       }
     } catch (e) {
       console.error(e);

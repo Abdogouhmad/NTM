@@ -18,7 +18,7 @@ type AwsConfigType = {
 
 // Load and validate environment variables
 const loadConfig = (): AwsConfigType => {
-  const COGNITO_CLIENT_ID = "38s8avn4380e35691j66m0quan";
+  const COGNITO_CLIENT_ID ="38s8avn4380e35691j66m0quan";
   const REGION = "us-east-1";
   const COGNITO_USER_POOL_ID = "us-east-1_EhTAvUuD4";
 
