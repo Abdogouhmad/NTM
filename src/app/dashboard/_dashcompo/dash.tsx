@@ -38,9 +38,7 @@ export default function Dash() {
   }, []);
 
   const handleFetch = async () => {
-    const API_URL =
-      "https://9q2n41kupj.execute-api.us-east-1.amazonaws.com/dev/note";
-
+    const API_URL = process.env.NEXT_PUBLIC_URL!;
     try {
       const resp = await axios.get<NotesData>(API_URL);
       setNotes(resp.data.notes);
@@ -64,8 +62,7 @@ export default function Dash() {
   // confirm the delete
   const handleConfirmDeleteNote = async () => {
     if (noteToDelete) {
-      const API_URL =
-        "https://9q2n41kupj.execute-api.us-east-1.amazonaws.com/dev/note";
+      const API_URL = process.env.NEXT_PUBLIC_URL!;
 
       try {
         await axios.delete(`${API_URL}?id=${noteToDelete.id}`);

@@ -17,7 +17,7 @@ type AwsConfigType = {
 
 // Load and validate environment variables
 const loadConfig = (): AwsConfigType => {
-  const COGNITO_CLIENT_ID = process.env.ID || "no key";
+  const COGNITO_CLIENT_ID = process.env.NEXT_PUBLIC_ID || "no key";
   const REGION = "us-east-1";
   console.log("ID----->", COGNITO_CLIENT_ID)
   console.log("RE----->", REGION);

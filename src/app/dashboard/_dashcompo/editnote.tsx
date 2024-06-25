@@ -41,7 +41,7 @@ const Editnote: React.FC<EditNoteProps> = ({ note, onClose }) => {
     const Username = getCookie("username");
     const { Description, Note, NoteType, Title } = data;
     const id = note?.id;
-    const API_URL = `https://9q2n41kupj.execute-api.us-east-1.amazonaws.com/dev/note`;
+    const API_URL = process.env.NEXT_PUBLIC_URL!;
 
     const payload = {
       id,
