@@ -13,31 +13,24 @@ import {
 type AwsConfigType = {
   COGNITO_CLIENT_ID: string;
   REGION: string;
-  COGNITO_USER_POOL_ID: string;
 };
 
 // Load and validate environment variables
 const loadConfig = (): AwsConfigType => {
-  const COGNITO_CLIENT_ID ="38s8avn4380e35691j66m0quan";
+  const COGNITO_CLIENT_ID = process.env.ID || "no key";
   const REGION = "us-east-1";
-  const COGNITO_USER_POOL_ID = "us-east-1_EhTAvUuD4";
+  console.log("ID----->", COGNITO_CLIENT_ID)
+  console.log("RE----->", REGION);
+  if (!COGNITO_CLIENT_ID) {
+    throw new Error("Missing required environment variable: COGNITO_CLIENT_ID");
+  }
+  if (!REGION) {
+    throw new Error("Missing required environment variable: AWS_REGION");
+  }
 
-  // if (!COGNITO_CLIENT_ID) {
-  //   throw new Error("Missing required environment variable: COGNITO_CLIENT_ID");
-  // }
-  // if (!REGION) {
-  //   throw new Error("Missing required environment variable: AWS_REGION");
-  // }
-
-  // if (!COGNITO_USER_POOL_ID) {
-  //   throw new Error(
-  //     "Missing required environment variable: COGNITO_USER_POOL_ID"
-  //   );
-  // }
   return {
     COGNITO_CLIENT_ID,
     REGION,
-    COGNITO_USER_POOL_ID,
   };
 };
 
