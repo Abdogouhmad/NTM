@@ -1,5 +1,5 @@
 # Base image
-FROM oven/bun:slim as base
+FROM oven/bun:slim AS base
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN bun install --frozen-lockfile
 EXPOSE 3000
 
 # Builder stage
-FROM base as builder
+FROM base AS builder
 WORKDIR /app
 
 # Copy all files and build the project
