@@ -1,12 +1,18 @@
 version: 0.2
 
+env:
+  variables:
+    REPOSITORY_URI: "851725395125.dkr.ecr.us-east-1.amazonaws.com/ntm-container"
+  privileged: true  # Ensure privileged mode is enabled
+
 phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 851725395125.dkr.ecr.us-east-1.amazonaws.com
-      - export REPOSITORY_URI=851725395125.dkr.ecr.us-east-1.amazonaws.com/ntm-container
-      - export IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REPOSITORY_URI
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+      - echo $REPOSITORY_URI
+      - echo $IMAGE_TAG
 
   build:
     commands:
@@ -30,5 +36,5 @@ phases:
 artifacts:
   files:
     - 'imagedefinitions.json'
-    - 'appspec.yml'  # Ensure these files exist and are correctly configured.
+    - 'appspec.yml'
     - 'taskdef.json'
