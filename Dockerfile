@@ -22,7 +22,7 @@ COPY . .
 RUN bun run build
 
 # Production stage
-FROM oven/bun:slim as production
+FROM oven/bun:slim AS production
 
 WORKDIR /app
 
