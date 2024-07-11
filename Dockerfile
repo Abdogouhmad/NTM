@@ -27,7 +27,7 @@ FROM public.ecr.aws/library/node:lts-slim AS production
 
 WORKDIR /app
 
-ENV NODE_ENV=production
+# ENV NODE_ENV=production
 
 # Create non-root user and set permissions
 RUN addgroup --gid 1001 nodejs \
