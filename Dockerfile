@@ -1,14 +1,14 @@
 # Base image
-FROM public.ecr.aws/avanti/oven/bun:1.0.29-alpine AS base
+FROM public.ecr.aws/library/node:lts-slim AS base
 
 WORKDIR /app
 
 # Copy necessary files for dependency installation
-COPY package*.json bun.lockb ./
+COPY package*.json ./
 
 # Install dependencies
 RUN echo "---------> Installing packages ... <-------" && \
-    bun install --frozen-lockfile
+    npm install --production
 
 # Expose the port the app runs on
 EXPOSE 3000
@@ -20,10 +20,10 @@ WORKDIR /app
 
 # Copy all files and build the project
 COPY . .
-RUN bun run build
+RUN npm run build
 
 # Production stage
-FROM oven/bun:slim AS production
+FROM public.ecr.aws/library/node:lts-slim AS production
 
 WORKDIR /app
 
@@ -41,4 +41,4 @@ COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # Start the application
-CMD ["bun", "run", "start"]
+CMD ["npm", "start"]
